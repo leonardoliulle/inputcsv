@@ -39,23 +39,58 @@ $con = getdba();
           while (($getData = fgetcsv($file, 10000, ",")) !== FALSE)
            {
 
+
+            // Explode em array por ponto em virgula para colocar o para distribuir no final
             $getData = explode(";", $getData[0]);
-            echo $getData[0]."','".$getData[1]."','".$getData[2]."','".$getData[3]."')<br>";
+
+
+            //Verificação da quantidade da array para fazer o input
+            $arraycount = count($getData);
+
+            //
+            $inputs = "'";
+            for ($i = 0; $i < $arraycount; $i++) {
+                if (($arraycount-1) == $i) {
+                $inputs .= $getData[$i]."'";
+                } else {
+                $inputs .= $getData[$i]."','";
+                }
+            }
+            echo "<pre>";
+            print_r($inputs);
+            echo "<pre>";
+
+            // echo $getData[0]."','".$getData[1]."','".$getData[2]."','".$getData[3]."')<br>";
+
+
+
+            // comparando o número de colunas da tabela com o numero de colunas na base.
+            $numberofcols = 4;
+            if ($numberofcols == $arraycount) {
 
              $sql = "INSERT into employeeinfo (firstname,lastname,email,reg_date) 
-                   values ('".$getData[0]."','".$getData[1]."','".$getData[2]."','".$getData[3]."')";
+                   values (".$inputs.")";
                    $result = mysqli_query($con, $sql);
-        
+     
+            } else {
+                // Mensagem de erro no compativo de colunas
+                    echo "<script type=\"text/javascript\">
+                    alert(\"Numero de Colunas divergente.\");
+                    window.location = \"index.php\"
+                  </script>";
+            }
         if(!isset($result))
         {
+          // mensagem de não input do arquivo
           echo "<script type=\"text/javascript\">
-              alert(\"Invalid File:Please Upload CSV File.\");
+              alert(\"Arquivo CSV invalido:Por favor, tente inputar um arquivo CSV.\");
               window.location = \"index.php\"
               </script>";   
         }
         else {
+            // mensagem de input do arquivo OK.
             echo "<script type=\"text/javascript\">
-            alert(\"CSV File has been successfully Imported.\");
+            alert(\"Arquivo CSV input com sucesso.\");
             window.location = \"index.php\"
           </script>";
         }
@@ -64,37 +99,6 @@ $con = getdba();
            fclose($file); 
      }
   }  
-
-
-
-
-
-function get_all_records(){
-    $con = getdba();
-    $Sql = "SELECT * FROM employeeinfo";
-    $result = mysqli_query($con, $Sql);  
-    if (mysqli_num_rows($result) > 0) {
-     echo "<div class='table-responsive'><table id='myTable' class='table table-striped table-bordered'>
-             <thead><tr><th>EMP ID</th>
-                          <th>First Name</th>
-                          <th>Last Name</th>
-                          <th>Email</th>
-                          <th>Registration Date</th>
-                        </tr></thead><tbody>";
-     while($row = mysqli_fetch_assoc($result)) {
-         echo "<tr><td>" . $row['emp_id']."</td>
-                   <td>" . $row['firstname']."</td>
-                   <td>" . $row['lastname']."</td>
-                   <td>" . $row['email']."</td>
-                   <td>" . $row['reg_date']."</td></tr>";        
-     }
-    
-     echo "</tbody></table></div>";
-     
-} else {
-     echo "you have no records";
-}
-}
 
 
 
