@@ -2,7 +2,7 @@
 
 
 
-
+// function para conectar ao banco
 function getdba(){
 $servername = "localhost";
 $username = "root";
