@@ -54,10 +54,10 @@ $con = getdba();
               </script>";   
         }
         else {
-          //   echo "<script type=\"text/javascript\">
-          //   alert(\"CSV File has been successfully Imported.\");
-          //   window.location = \"index.php\"
-          // </script>";
+            echo "<script type=\"text/javascript\">
+            alert(\"CSV File has been successfully Imported.\");
+            window.location = \"index.php\"
+          </script>";
         }
            }
       
